@@ -1,7 +1,9 @@
+using System;
 using Application.Activities;
 using Application.Core;
 using Application.Interfaces;
-using Application.Photos;
+using AutoMapper;
+using Infrastructure.Email;
 using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
@@ -58,6 +60,7 @@ namespace API.Extensions
                 // or from the environment variable from Heroku, use it to set up your DbContext.
                 options.UseNpgsql(connStr);
             });
+
             services.AddCors(opt =>
             {
                 opt.AddPolicy("CorsPolicy", policy =>
@@ -66,6 +69,7 @@ namespace API.Extensions
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials()
+                        .WithExposedHeaders("WWW-Authenticate", "Pagination")
                         .WithOrigins("http://localhost:3000");
                 });
             });
@@ -73,6 +77,7 @@ namespace API.Extensions
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.AddScoped<EmailSender>();
             services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
             services.AddSignalR();
 
