@@ -3,7 +3,6 @@ using Application.Activities;
 using Application.Core;
 using Application.Interfaces;
 using AutoMapper;
-using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
