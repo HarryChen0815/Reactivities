@@ -48,12 +48,21 @@ namespace API
             app.UseXfo(opt => opt.Deny());
             app.UseCsp(opt => opt
                 .BlockAllMixedContent()
-                .StyleSources(s => s.Self().CustomSources("https://fonts.googleapis.com"))
+                .StyleSources(s => s.Self().CustomSources(
+                    "https://fonts.googleapis.com",
+                    "sha256-oFySg82XYSNiSd+Q3yfYPD/rxY6RMDMJ0KxzGG74iGM="))
                 .FontSources(s => s.Self().CustomSources("https://fonts.gstatic.com", "data:"))
                 .FormActions(s => s.Self())
                 .FrameAncestors(s => s.Self())
-                .ImageSources(s => s.Self().CustomSources("https://res.cloudinary.com"))
-                .ScriptSources(s => s.Self().CustomSources("sha256-bFTRivTHM98f1Ect+ViqbMgqkVOAT9RJonYpyW+lEio="))
+                .ImageSources(s => s.Self().CustomSources(
+                    "https://res.cloudinary.com",
+                    "https://www.facebook.com",
+                    "https://scontent.fakl6-1.fna.fbcdn.net"
+                    ))
+                .ScriptSources(s => s.Self().CustomSources(
+                    "sha256-bFTRivTHM98f1Ect+ViqbMgqkVOAT9RJonYpyW+lEio="
+                    ,"https://connect.facebook.net",
+                    "sha256-fyAqy8mHKnoTuC7s4HxcjR90I0+x+FmkWan/ruZwlN8="))
             );
 
             if (env.IsDevelopment())
@@ -63,7 +72,7 @@ namespace API
             }
             else
             {
-                app.Use(async (context, next) => 
+                app.Use(async (context, next) =>
                 {
                     context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000");
                     await next.Invoke();
